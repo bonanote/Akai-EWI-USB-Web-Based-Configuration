@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EWI USB Setup & Performance</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 10px; }
+        .section { margin-bottom: 10px; }
+        h1 { font-size: 1.2em; margin-bottom: 10px; }
+        h2 { font-size: 1em; margin-bottom: 5px; }
+        label { display: block; margin-bottom: 2px; font-weight: bold; font-size: 0.9em; }
+        input[type="range"] { width: 100%; margin-bottom: 2px; }
+        select, button { padding: 4px; margin: 2px; font-size: 0.9em; }
+        .midi-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .midi-row label { display: inline; margin: 0 5px 0 0; font-weight: normal; }
+        .slider-item { margin-bottom: 8px; }
+        .slider-row { display: flex; align-items: center; justify-content: space-between; gap: 5px; }
+        .slider-row span { min-width: 30px; text-align: right; font-size: 0.9em; }
+        .buttons { display: flex; gap: 10px; margin-bottom: 10px; }
+        #log { margin-top: 10px; padding: 8px; background: #f0f0f0; white-space: pre-wrap; font-size: 0.8em; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>EWI USB Setup & Performance Settings</h1>
+    
+    <div class="section">
+        <h2>MIDI Access</h2>
+        <div class="midi-row">
+            <button id="requestMidi">Request MIDI Access</button>
+            <label for="inputSelect">Input:</label>
+            <select id="inputSelect"><option>No inputs available</option></select>
+            <label for="outputSelect">Output:</label>
+            <select id="outputSelect"><option>No outputs available</option></select>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="slider-item">
+            <label for="breathG">Breath Gain (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="breathG" min="0" max="127" value="64" step="1">
+                <span id="breathGValue">64</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="biteG">Bite Gain (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="biteG" min="0" max="127" value="64" step="1">
+                <span id="biteGValue">64</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="biteACG">Bite AC Gain for Pitch Bend (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="biteACG" min="0" max="127" value="64" step="1">
+                <span id="biteACGValue">64</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="pitchBG">Pitch Bend Gain (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="pitchBG" min="0" max="127" value="64" step="1">
+                <span id="pitchBGValue">64</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="keyDelay">Key Delay (0-15):</label>
+            <div class="slider-row">
+                <input type="range" id="keyDelay" min="0" max="15" value="8" step="1">
+                <span id="keyDelayValue">8</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="midiChannel">Midi Channel In/Out (0=Ch1, 0-15):</label>
+            <div class="slider-row">
+                <input type="range" id="midiChannel" min="0" max="15" value="0" step="1">
+                <span id="midiChannelValue">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="fingering">Fingering (0=EWI Standard, 1=Sax, 2=Flute, 3=Oboe, 4=EVI Valve 1, 5=EVI Valve 2):</label>
+            <div class="slider-row">
+                <input type="range" id="fingering" min="0" max="5" value="0" step="1">
+                <span id="fingeringValue">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="transpose">Transpose (52=-12 semitones to 76=+12 semitones, 64=0):</label>
+            <div class="slider-row">
+                <input type="range" id="transpose" min="52" max="76" value="64" step="1">
+                <span id="transposeValue">64</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="velocity">Velocity (0=dynamic, 1-127=fixed):</label>
+            <div class="slider-row">
+                <input type="range" id="velocity" min="0" max="127" value="0" step="1">
+                <span id="velocityValue">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="breath1">Breath 1 Continuous Controller # (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="breath1" min="0" max="127" value="0" step="1">
+                <span id="breath1Value">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="breath2">Breath 2 Continuous Controller # (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="breath2" min="0" max="127" value="0" step="1">
+                <span id="breath2Value">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="bite1">Bite 1 Continuous Controller # (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="bite1" min="0" max="127" value="0" step="1">
+                <span id="bite1Value">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="bite2">Bite 2 Continuous Controller # (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="bite2" min="0" max="127" value="0" step="1">
+                <span id="bite2Value">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="pitchBUp">Pitch Bend UP CC # (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="pitchBUp" min="0" max="127" value="0" step="1">
+                <span id="pitchBUpValue">0</span>
+            </div>
+        </div>
+        <div class="slider-item">
+            <label for="pitchBDw">Pitch Bend DOWN CC # (0-127):</label>
+            <div class="slider-row">
+                <input type="range" id="pitchBDw" min="0" max="127" value="0" step="1">
+                <span id="pitchBDwValue">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="buttons">
+        <button id="resendAll">Resend All Settings</button>
+        <button id="saveDefault">Save as Default</button>
+    </div>
+    
+    <div id="log"></div>
+
+    <script>
+        let midiAccess = null;
+        let currentInput = null;
+        let currentOutput = null;
+        let currentValues = {
+            // Setup
+            breathG: 64,
+            biteG: 64,
+            biteACG: 64,
+            pitchBG: 64,
+            keyDelay: 8,
+            // Performance
+            midiChannel: 0,
+            fingering: 0,
+            transpose: 64,
+            velocity: 0,
+            breath1: 0,
+            breath2: 0,
+            bite1: 0,
+            bite2: 0,
+            pitchBUp: 0,
+            pitchBDw: 0
+        };
+
+        const logElement = document.getElementById('log');
+        function log(message) {
+            console.log(message);
+            logElement.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+        }
+
+        function updateValueDisplay(sliderId, valueSpanId) {
+            const slider = document.getElementById(sliderId);
+            const span = document.getElementById(valueSpanId);
+            span.textContent = slider.value;
+            currentValues[sliderId] = parseInt(slider.value);
+        }
+
+        function sendSetup() {
+            if (!currentOutput) {
+                log('No MIDI output selected');
+                return;
+            }
+
+            const a = currentValues.breathG;
+            const b = currentValues.biteG;
+            const c = currentValues.biteACG;
+            const d = currentValues.pitchBG;
+            const e = currentValues.keyDelay;
+
+            log(`${Math.round(a)}, ${Math.round(b)}, ${Math.round(c)}, ${Math.round(d)}, ${Math.round(e)}`);
+
+            // Unlock SysEx: F0 63 01 62 04 06 20 F7
+            const unlock = [0xF0, 0x63, 0x01, 0x62, 0x04, 0x06, 0x20, 0xF7];
+            currentOutput.send(unlock);
+
+            // Setup SysEx: F0 47 7F 6D 00 00 06 a b c d e 7F F7
+            const setup = [0xF0, 0x47, 0x7F, 0x6D, 0x00, 0x00, 0x06, a, b, c, d, e, 0x7F, 0xF7];
+            currentOutput.send(setup);
+
+            // Lock SysEx: F0 63 01 62 04 06 10 F7
+            const lock = [0xF0, 0x63, 0x01, 0x62, 0x04, 0x06, 0x10, 0xF7];
+            currentOutput.send(lock);
+
+            log('Setup settings sent to EWI USB');
+        }
+
+        function sendPerf() {
+            if (!currentOutput) {
+                log('No MIDI output selected');
+                return;
+            }
+
+            const f = currentValues.midiChannel;
+            const g = currentValues.fingering;
+            const h = currentValues.transpose;
+            const i = currentValues.velocity;
+            const j = currentValues.breath1;
+            const k = currentValues.breath2;
+            const l = currentValues.bite1;
+            const m = currentValues.bite2;
+            const n = currentValues.pitchBUp;
+            const o = currentValues.pitchBDw;
+
+            log(`${Math.round(f)}, ${Math.round(g)}, ${Math.round(h)}, ${Math.round(i)}, ${Math.round(j)}, ${Math.round(k)}, ${Math.round(l)}, ${Math.round(m)}, ${Math.round(n)}, ${Math.round(o)}`);
+
+            // Unlock SysEx: F0 63 01 62 04 06 20 F7
+            const unlock = [0xF0, 0x63, 0x01, 0x62, 0x04, 0x06, 0x20, 0xF7];
+            currentOutput.send(unlock);
+
+            // Controls SysEx: F0 47 7F 6D 02 00 0B f g h i j k 00 l m n o F7
+            const controls = [0xF0, 0x47, 0x7F, 0x6D, 0x02, 0x00, 0x0B, f, g, h, i, j, k, 0x00, l, m, n, o, 0xF7];
+            currentOutput.send(controls);
+
+            // Lock SysEx: F0 63 01 62 04 06 10 F7
+            const lock = [0xF0, 0x63, 0x01, 0x62, 0x04, 0x06, 0x10, 0xF7];
+            currentOutput.send(lock);
+
+            log('Performance settings sent to EWI USB');
+        }
+
+        function sendAll() {
+            sendSetup();
+            sendPerf();
+        }
+
+        // Load saved settings on page load
+        const saved = localStorage.getItem('ewiSettings');
+        if (saved) {
+            const loaded = JSON.parse(saved);
+            Object.assign(currentValues, loaded);
+            Object.keys(loaded).forEach(key => {
+                const slider = document.getElementById(key);
+                if (slider) {
+                    slider.value = loaded[key];
+                    const span = document.getElementById(key + 'Value');
+                    if (span) {
+                        span.textContent = loaded[key];
+                    }
+                }
+            });
+            log('Loaded saved default settings');
+        }
+
+        // Event listeners for setup sliders
+        ['breathG', 'biteG', 'biteACG', 'pitchBG', 'keyDelay'].forEach(id => {
+            const slider = document.getElementById(id);
+            const spanId = id + 'Value';
+            slider.addEventListener('input', () => updateValueDisplay(id, spanId));
+            slider.addEventListener('change', sendSetup);
+        });
+
+        // Event listeners for performance sliders
+        ['midiChannel', 'fingering', 'transpose', 'velocity', 'breath1', 'breath2', 'bite1', 'bite2', 'pitchBUp', 'pitchBDw'].forEach(id => {
+            const slider = document.getElementById(id);
+            const spanId = id + 'Value';
+            slider.addEventListener('input', () => updateValueDisplay(id, spanId));
+            slider.addEventListener('change', sendPerf);
+        });
+
+        // Resend all button
+        document.getElementById('resendAll').addEventListener('click', () => {
+            sendAll();
+            log('All settings resent to EWI USB');
+        });
+
+        // Save default button
+        document.getElementById('saveDefault').addEventListener('click', () => {
+            localStorage.setItem('ewiSettings', JSON.stringify(currentValues));
+            log('Settings saved as default');
+        });
+
+        // MIDI request
+        document.getElementById('requestMidi').addEventListener('click', async () => {
+            try {
+                midiAccess = await navigator.requestMIDIAccess({ sysex: true });
+                log('MIDI access granted');
+
+                const inputs = Array.from(midiAccess.inputs.values());
+                const inputSelect = document.getElementById('inputSelect');
+                inputSelect.innerHTML = '';
+                if (inputs.length === 0) {
+                    inputSelect.innerHTML = '<option>No inputs available</option>';
+                } else {
+                    inputs.forEach(input => {
+                        const option = document.createElement('option');
+                        option.value = input.id;
+                        option.textContent = input.name || `Input ${input.id}`;
+                        inputSelect.appendChild(option);
+                    });
+                    inputSelect.addEventListener('change', (e) => {
+                        currentInput = midiAccess.inputs.get(e.target.value);
+                        log(`Input selected: ${currentInput ? currentInput.name : 'Unknown'}`);
+                    });
+                }
+
+                const outputs = Array.from(midiAccess.outputs.values());
+                const outputSelect = document.getElementById('outputSelect');
+                outputSelect.innerHTML = '';
+                if (outputs.length === 0) {
+                    outputSelect.innerHTML = '<option>No outputs available</option>';
+                } else {
+                    outputs.forEach(output => {
+                        const option = document.createElement('option');
+                        option.value = output.id;
+                        option.textContent = output.name || `Output ${output.id}`;
+                        outputSelect.appendChild(option);
+                    });
+                    outputSelect.addEventListener('change', (e) => {
+                        currentOutput = midiAccess.outputs.get(e.target.value);
+                        log(`Output selected: ${currentOutput ? currentOutput.name : 'Unknown'}`);
+                        // Auto-send saved settings if they exist
+                        if (localStorage.getItem('ewiSettings')) {
+                            setTimeout(() => {
+                                sendAll();
+                                log('Auto-sent saved default settings to EWI USB');
+                            }, 500); // Small delay to ensure output is ready
+                        }
+                    });
+                }
+            } catch (err) {
+                log('MIDI access denied: ' + err.message);
+            }
+        });
+    </script>
+</body>
+</html>
